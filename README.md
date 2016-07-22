@@ -15,10 +15,19 @@ wrapped by `dumb-init` to reap dead container processes.
 ./generate-keys.sh
 export CONCOURSE_LOGIN=concourse
 export CONCOURSE_PASSWORD=changeme
+export CONCOURSE_EXTERNAL_URL=http://127.0.0.1:8080
 docker-compose up
 ```
 
 Then, browse to [http://127.0.0.1:8080](http://127.0.0.1:8080).
+
+Or, if you're using `docker-machine`, set:
+
+```sh
+export CONCOURSE_EXTERNAL_URL=http://192.168.99.100:8080
+```
+
+...and then browse to [http://192.168.99.100:8080](http://192.168.99.100:8080).
 
 For further configuration, run `web --help` or `worker --help`.
 
