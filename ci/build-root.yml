@@ -14,4 +14,4 @@ outputs:
 - name: concourse-image-build-root
 
 run:
-  path: concourse-docker/build-root
+  path: concourse-docker/ci/build-root
