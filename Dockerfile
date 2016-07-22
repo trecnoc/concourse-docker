@@ -1,7 +1,7 @@
 FROM debian:jessie
 
-ADD dumb-init /usr/local/bin
-ADD concourse /usr/local/bin
+ADD bin/dumb-init /usr/local/bin
+ADD bin/concourse /usr/local/bin
 
 # volume containing keys to use
 VOLUME /concourse-keys
