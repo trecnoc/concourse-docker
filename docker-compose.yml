@@ -5,21 +5,24 @@ concourse-db:
     POSTGRES_PASSWORD: concourse_pass
     POSTGRES_USER: concourse_user
     PGDATA: /database
+
 concourse-web:
-  build: .
-  links:
-    - concourse-db
-  command: /root/scripts/start.sh web
-  ports:
-    - "8080:8080"
+  image: concourse/concourse
+  links: [concourse-db]
+  command: web
+  ports: ["8080:8080"]
+  volumes: [./keys/web:/concourse-keys]
   environment:
-    CONCOURSE_LOGIN: '${CONCOURSE_LOGIN}'
-    CONCOURSE_PASSWORD: '${CONCOURSE_PASSWORD}'
-    CONCOURSE_EXTERNAL_URL: '${CONCOURSE_EXTERNAL_URL}'
+    CONCOURSE_BASIC_AUTH_USERNAME: "${CONCOURSE_LOGIN}"
+    CONCOURSE_BASIC_AUTH_PASSWORD: "${CONCOURSE_PASSWORD}"
+    CONCOURSE_EXTERNAL_URL: "${CONCOURSE_EXTERNAL_URL}"
+    CONCOURSE_POSTGRES_DATA_SOURCE: "postgres://concourse_user:concourse_pass@concourse-db:5432/concourse?sslmode=disable"
+
 concourse-worker:
-  build: .
+  image: concourse/concourse
   privileged: true
-  links:
-    - concourse-web
-    - concourse-db
-  command: /root/scripts/start.sh worker
+  links: [concourse-web]
+  command: worker
+  volumes: [./keys/worker:/concourse-keys]
+  environment:
+    CONCOURSE_TSA_HOST: concourse-web

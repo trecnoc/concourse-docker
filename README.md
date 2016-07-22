@@ -1,36 +1,26 @@
 # Concourse Docker
 
-**Running 1.4.1**
-
-Create [Docker](https://www.docker.com/) images to run [Concourse](http://concourse.ci) in.
-
-See [here](https://github.com/concourse/bin) for more details.
-
-See [Standalone Binaries](http://concourse.ci/binaries.html) for binary details.
+Creates a [Docker](https://www.docker.com/) image to run
+[Concourse](http://concourse.ci) in.
 
 ## Usage
 
-### Quick-start
+This image simply packages the [Concourse standalone
+binary](http://concourse.ci/binaries.html) and runs it as the `ENTRYPOINT`,
+wrapped by `dumb-init` to reap dead container processes.
 
-See the Quick-start folder.
+### Quick-start with Docker Compose
 
-### Generate private keys
-
-Run generate-keys.sh to create keys to be used by the web host and workers.
-
-### Environment variables
-
-* `CONCOURSE_EXTERNAL_URL` - The URL to access concourse web at. Usually [http://192.168.99.100:8080](http://192.168.99.100:8080) or [http://localhost:8080](http://localhost:8080)
-* `CONCOURSE_LOGIN` - Username to use for concourse basic auth.
-* `CONCOURSE_PASSWORD` = Password to use for concourse basic auth.
-
-### Start Concourse
-
-Run:
-```
+```sh
+./generate-keys.sh
+export CONCOURSE_LOGIN=concourse
+export CONCOURSE_PASSWORD=changeme
 docker-compose up
 ```
 
-Open the CONCOURSE_EXTERNAL_URL specified above ([http://192.168.99.100:8080](http://192.168.99.100:8080)) and start using concourse.
+Then, browse to [http://127.0.0.1:8080](http://127.0.0.1:8080).
 
-See [Using Concourse](https://concourse.ci/using-concourse.html) to get started.
+For further configuration, run `web --help` or `worker --help`.
+
+See [Using Concourse](https://concourse.ci/using-concourse.html) to
+get started.
