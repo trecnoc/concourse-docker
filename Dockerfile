@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-RUN apt-get update && apt-get -y install iproute2
+RUN apt-get update && apt-get -y install iproute2 ca-certificates
 
 ADD bin/dumb-init /usr/local/bin
 ADD bin/concourse /usr/local/bin
