@@ -17,7 +17,8 @@ ENV CONCOURSE_SESSION_SIGNING_KEY /concourse-keys/session_signing_key
 ENV CONCOURSE_TSA_PUBLIC_KEY         /concourse-keys/tsa_host_key.pub
 ENV CONCOURSE_TSA_WORKER_PRIVATE_KEY /concourse-keys/worker_key
 
-# directory to keep worker state; can be bind-mounted over
+# volume for non-aufs/etc. mount for baggageclaim's driver
+VOLUME /worker-state
 ENV CONCOURSE_WORK_DIR /worker-state
 
 ENTRYPOINT ["/usr/local/bin/dumb-init", "/usr/local/bin/concourse"]
