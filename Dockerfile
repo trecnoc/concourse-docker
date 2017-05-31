@@ -21,4 +21,7 @@ ENV CONCOURSE_TSA_WORKER_PRIVATE_KEY /concourse-keys/worker_key
 VOLUME /worker-state
 ENV CONCOURSE_WORK_DIR /worker-state
 
+# enable DNS proxy to support Docker's 127.x.x.x DNS server
+ENV CONCOURSE_GARDEN_DNS_PROXY_ENABLE true
+
 ENTRYPOINT ["/usr/local/bin/dumb-init", "/usr/local/bin/concourse"]
