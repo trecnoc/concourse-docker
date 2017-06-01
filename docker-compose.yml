@@ -4,10 +4,10 @@ services:
   concourse-db:
     image: postgres:9.5
     environment:
-      POSTGRES_DB: concourse
-      POSTGRES_PASSWORD: concourse_pass
-      POSTGRES_USER: concourse_user
-      PGDATA: /database
+    - POSTGRES_DB=concourse
+    - POSTGRES_PASSWORD=concourse_pass
+    - POSTGRES_USER=concourse_user
+    - PGDATA=/database
 
   concourse-web:
     image: concourse/concourse
@@ -18,14 +18,14 @@ services:
     volumes: ["./keys/web:/concourse-keys"]
     restart: unless-stopped
     environment:
-      CONCOURSE_BASIC_AUTH_USERNAME: "${CONCOURSE_LOGIN}"
-      CONCOURSE_BASIC_AUTH_PASSWORD: "${CONCOURSE_PASSWORD}"
-      CONCOURSE_NO_REALLY_I_DONT_WANT_ANY_AUTH: "${CONCOURSE_NO_REALLY_I_DONT_WANT_ANY_AUTH}"
-      CONCOURSE_EXTERNAL_URL: "${CONCOURSE_EXTERNAL_URL}"
-      CONCOURSE_POSTGRES_HOST: concourse-db
-      CONCOURSE_POSTGRES_USER: concourse_user
-      CONCOURSE_POSTGRES_PASSWORD: concourse_pass
-      CONCOURSE_POSTGRES_DATABASE: concourse
+    - CONCOURSE_POSTGRES_HOST=concourse-db
+    - CONCOURSE_POSTGRES_USER=concourse_user
+    - CONCOURSE_POSTGRES_PASSWORD=concourse_pass
+    - CONCOURSE_POSTGRES_DATABASE=concourse
+    - CONCOURSE_EXTERNAL_URL=${CONCOURSE_EXTERNAL_URL}
+    - CONCOURSE_BASIC_AUTH_USERNAME
+    - CONCOURSE_BASIC_AUTH_PASSWORD
+    - CONCOURSE_NO_REALLY_I_DONT_WANT_ANY_AUTH
 
   concourse-worker:
     image: concourse/concourse
@@ -35,5 +35,5 @@ services:
     depends_on: [concourse-web]
     volumes: ["./keys/worker:/concourse-keys"]
     environment:
-      CONCOURSE_TSA_HOST: concourse-web
-      CONCOURSE_GARDEN_NETWORK: "${CONCOURSE_GARDEN_NETWORK}"
+    - CONCOURSE_TSA_HOST=concourse-web
+    - CONCOURSE_GARDEN_NETWORK
