@@ -8,6 +8,7 @@ image_resource:
 inputs:
 - name: concourse-docker
 - name: concourse-image-rc
+- name: postgres-image
 - name: concourse
 
 run:

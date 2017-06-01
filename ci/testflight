@@ -81,8 +81,8 @@ function stop_docker() {
 
 start_docker
 
-image=$(docker load < concourse-image-rc/image | awk '{print $NF}')
-docker tag $image concourse/concourse
+docker tag $(docker load < postgres-image/image | awk '{print $NF}') postgres
+docker tag $(docker load < concourse-image-rc/image | awk '{print $NF}') concourse/concourse
 
 pushd concourse-docker
   mkdir -p keys/web keys/worker
