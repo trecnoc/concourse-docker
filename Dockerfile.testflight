@@ -1,0 +1,6 @@
+FROM concourse/bin-testflight-ci
+
+RUN curl -fsSL https://get.docker.com/ | sh
+
+ADD docker-compose/docker-compose-* /usr/local/bin
+RUN chmod +x /usr/local/bin/docker-compose
