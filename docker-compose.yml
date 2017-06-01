@@ -36,3 +36,4 @@ services:
     volumes: ["./keys/worker:/concourse-keys"]
     environment:
       CONCOURSE_TSA_HOST: concourse-web
+      CONCOURSE_GARDEN_NETWORK: "${CONCOURSE_GARDEN_NETWORK}"
