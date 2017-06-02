@@ -16,7 +16,6 @@ services:
     depends_on: [concourse-db]
     ports: ["8080:8080"]
     volumes: ["./keys/web:/concourse-keys"]
-    restart: unless-stopped
     environment:
     - CONCOURSE_POSTGRES_HOST=concourse-db
     - CONCOURSE_POSTGRES_USER=concourse_user
