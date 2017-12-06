@@ -79,10 +79,6 @@ function stop_docker() {
   wait $pid
 }
 
-function capture_docker_logs() {
-  docker ps -aq | xargs -I{} -n1 bash -c "docker logs {} | sed \"s/^/[{}] /g\"" 2>/dev/null
-}
-
 start_docker
 
 docker tag $(docker load < postgres-image/image | awk '{print $NF}') postgres
@@ -103,7 +99,6 @@ pushd concourse-docker
   export CONCOURSE_EXTERNAL_URL="http://$(hostname -i):8080"
   export CONCOURSE_GARDEN_NETWORK="10.224.0.0/16" # do not collide with outer Concourse network
   docker-compose up -d
-  trap capture_docker_logs INT QUIT TERM EXIT
 popd
 
 until test $(curl -s -o /dev/null -w '%{http_code}' localhost:8080/api/v1/info) -eq 200; do
