@@ -1,7 +1,7 @@
 # Concourse Docker
 
 Creates a [Docker](https://www.docker.com/) image to run
-[Concourse](http://concourse.ci) in.
+[Concourse](https://concourse-ci.org) in.
 
 ## Usage
 
