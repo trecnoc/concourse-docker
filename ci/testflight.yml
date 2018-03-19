@@ -11,5 +11,8 @@ inputs:
 - name: postgres-image
 - name: concourse
 
+params:
+  DOCKER_COMPOSE_YML: docker-compose.yml
+
 run:
   path: concourse-docker/ci/testflight
