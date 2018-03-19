@@ -103,7 +103,7 @@ pushd concourse-docker
   export CONCOURSE_NO_REALLY_I_DONT_WANT_ANY_AUTH=true
   export CONCOURSE_EXTERNAL_URL="http://$(hostname -i):8080"
   export CONCOURSE_GARDEN_NETWORK="10.224.0.0/16" # do not collide with outer Concourse network
-  docker-compose up -d -f ${DOCKER_COMPOSE_YML:-docker-compose.yml}
+  docker-compose -f ${DOCKER_COMPOSE_YML:-docker-compose.yml} up -d
 popd
 
 until test $(curl -s -o /dev/null -w '%{http_code}' localhost:8080/api/v1/info) -eq 200; do
