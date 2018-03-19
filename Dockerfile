@@ -19,12 +19,13 @@ ENV CONCOURSE_TSA_WORKER_PRIVATE_KEY /concourse-keys/worker_key
 
 # volume for non-aufs/etc. mount for baggageclaim's driver
 VOLUME /worker-state
-# for 'worker' command
+
+# auto-wire work dir for 'worker' and 'quickstart'
 ENV CONCOURSE_WORK_DIR /worker-state
-# for 'quickstart' command
 ENV CONCOURSE_WORKER_WORK_DIR /worker-state
 
 # enable DNS proxy to support Docker's 127.x.x.x DNS server
 ENV CONCOURSE_GARDEN_DNS_PROXY_ENABLE true
+ENV CONCOURSE_WORKER_GARDEN_DNS_PROXY_ENABLE true
 
 ENTRYPOINT ["/usr/local/bin/dumb-init", "/usr/local/bin/concourse"]
