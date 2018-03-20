@@ -101,15 +101,18 @@ pushd concourse-docker
   cp ./keys/web/tsa_host_key.pub ./keys/worker
 
   export CONCOURSE_NO_REALLY_I_DONT_WANT_ANY_AUTH=true
-  export CONCOURSE_EXTERNAL_URL="http://$(hostname -i):8080"
-  export CONCOURSE_GARDEN_NETWORK="10.224.0.0/16" # do not collide with outer Concourse network
+
+  # do not collide with outer Concourse network
+  export CONCOURSE_GARDEN_NETWORK="10.224.0.0/16"
+  export CONCOURSE_WORKER_GARDEN_NETWORK="10.224.0.0/16"
+
   docker-compose -f ${DOCKER_COMPOSE_YML:-docker-compose.yml} up -d
 popd
 
-until test $(curl -s -o /dev/null -w '%{http_code}' localhost:8080/api/v1/info) -eq 200; do
+until test $(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/api/v1/info) -eq 200; do
   echo "waiting for ATC..."
   sleep 1
 done
 
-export ATC_URL=$CONCOURSE_EXTERNAL_URL
+export ATC_URL=http://127.0.0.1:8080
 ./concourse/ci/scripts/testflight "$@"
