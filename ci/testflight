@@ -100,8 +100,6 @@ pushd concourse-docker
   cp ./keys/worker/worker_key.pub ./keys/web/authorized_worker_keys
   cp ./keys/web/tsa_host_key.pub ./keys/worker
 
-  export CONCOURSE_NO_REALLY_I_DONT_WANT_ANY_AUTH=true
-
   # do not collide with outer Concourse network
   export CONCOURSE_GARDEN_NETWORK="10.224.0.0/16"
   export CONCOURSE_WORKER_GARDEN_NETWORK="10.224.0.0/16"
@@ -115,4 +113,6 @@ until test $(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/api/v1
 done
 
 export ATC_URL=http://127.0.0.1:8080
+export ATC_USERNAME=test
+export ATC_PASSWORD=test
 ./concourse/ci/scripts/testflight "$@"
