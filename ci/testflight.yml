@@ -7,9 +7,10 @@ image_resource:
 
 inputs:
 - name: concourse-docker
-- name: concourse-image-rc
+- name: concourse-image
 - name: postgres-image
 - name: concourse
+
 
 params:
   DOCKER_COMPOSE_YML: docker-compose.yml
