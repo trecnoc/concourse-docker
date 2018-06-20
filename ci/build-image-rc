@@ -15,7 +15,7 @@ docker tag \
   "$(cat "${load_image}/repository"):$(cat "${load_image}/tag")"
 
 pushd concourse-image-build-root
-  docker build -t image-rc .
+  docker build -t concourse:latest .
 popd
 
-docker save -o concourse-image/image image-rc
+docker save -o concourse-image/image concourse:latest
