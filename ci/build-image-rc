@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e -u -x
+
+source concourse-docker/ci/common
+
+start_docker
+
+load_image=ubuntu-image
+
+docker load -i "${load_image}/image"
+
+docker tag \
+  "$(cat "${load_image}/image-id")" \
+  "$(cat "${load_image}/repository"):$(cat "${load_image}/tag")"
+
+pushd concourse-image-build-root
+  docker build -t concourse:latest .
+popd
+
+docker save -o concourse-image/image concourse:latest
