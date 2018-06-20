@@ -2,7 +2,7 @@
 
 set -e -u -x
 
-source common
+source concourse-docker/ci/common
 
 start_docker
 
