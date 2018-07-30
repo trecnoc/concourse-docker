@@ -29,7 +29,11 @@ The `docker-compose-quickstart.yml` file can be used to quickly get up and
 running with the `concourse quickstart` command. No keys need to be generated
 in this case.
 
-When running the Docker Compose `.yml` files, you will need to make sure you configure the authorization environment variables. If you want to run the Concourse web node with no authroziation, make sure to set `CONCOURSE_NO_REALLY_I_DONT_WANT_ANY_AUTH=true`.
+Both Docker Compose files configure a `test` user with `test` as their
+password, and grants every user access to the `main` team. To use this in
+production you'll definitely want to change that - see [Configuring Auth
+Providers](https://concourse-ci.org/install.html#auth-config) for more
+information..
 
 ## Caveats
 
