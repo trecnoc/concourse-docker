@@ -6,8 +6,10 @@ source concourse-docker/ci/common
 
 start_docker
 
-docker tag $(docker load < postgres-image/image | awk '{print $NF}') postgres
-docker tag $(docker load < concourse-image/image | awk '{print $NF}') concourse/concourse
+docker load -i postgres-image/image.tar
+docker load -i concourse-image/image.tar
+
+docker tag concourse/concourse-rc concourse/concourse
 
 pushd concourse-docker
   mkdir -p keys/web keys/worker

@@ -6,16 +6,10 @@ source concourse-docker/ci/common
 
 start_docker
 
-load_image=ubuntu-image
-
-docker load -i "${load_image}/image"
-
-docker tag \
-  "$(cat "${load_image}/image-id")" \
-  "$(cat "${load_image}/repository"):$(cat "${load_image}/tag")"
+docker load -i ubuntu-image/image.tar
 
 pushd concourse-image-build-root
-  docker build -t concourse:latest .
+  docker build -t concourse/concourse-rc:latest .
 popd
 
-docker save -o concourse-image/image concourse:latest
+docker save -o concourse-image/image.tar concourse/concourse-rc:latest
