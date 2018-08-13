@@ -71,14 +71,18 @@ docker run  --name concourse \
   --postgres-password=<PG_PASSWORD> \
   --postgres-host=concourse-db \
   --worker-garden-dns-server 8.8.8.8
-  ```
+```
 
 ## Caveats
 
 At the moment, workers running via Docker will not automatically leave the
-cluster gracefully on shutdown. This means you'll have to run [`fly
+cluster gracefully on shutdown. This can mean your pipelines get into a bad
+state when you restart the cluster, as they'll keep trying to use the old
+worker.
+
+For now you'll have to run [`fly
 prune-worker`](https://concourse-ci.org/administration.html#fly-prune-worker)
-to reap them.
+to reap any stalled workers when your cluster gets into this state.
 
 This will be resolved with [concourse/concourse
 #1457](https://github.com/concourse/concourse/issues/1457).
