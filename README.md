@@ -7,84 +7,68 @@ Configuration is done via `CONCOURSE_*` environment variables. To discover
 them, run `--help`:
 
 ```sh
-docker run concourse/concourse --help
+docker run -t concourse/concourse --help
 docker run -t concourse/concourse web --help
 docker run -t concourse/concourse worker --help
 ```
 
-See [the `concourse` binary docs](https://concourse-ci.org/install.html) for
-more information - the instructions and requirements are the same. For network
-and hardware resources reference, see [Deployment
-Topology](https://concourse-ci.org/topology.html).
+See [the Concourse install docs](https://concourse-ci.org/install.html) for more
+information on deploying and managing Concourse - the Docker repository just
+wraps the `concourse` binary, so the documentation covers it too.
 
+## Running with `docker-compose`
 
-## Docker Compose
+The `docker-compose.yml` in this repo will get you up and running with the
+latest version Concourse. To use it you'll first need to execute
+`./keys/generate` - this will generate credentials used to authorize the
+Concourse components with each-other:
 
-There are two Docker Compose `.yml` files in this repo. The first one,
-`docker-compose.yml`, runs a more traditional multi-container cluster. You'll
-need to run `./generate-keys.sh` before booting up, so that the containers know
-how to authorize each other. On systems with OpenSSH >= 7.8, you may need to
-run `./generate-keys.sh --use-pem` to generate the keys using the correct
-format.
-
-The `docker-compose-quickstart.yml` file can be used to quickly get up and
-running with the `concourse quickstart` command. No keys need to be generated
-in this case.
-
-Both Docker Compose files configure a `test` user with `test` as their
-password, and grants every user access to the `main` team. To use this in
-production you'll definitely want to change that - see [Configuring Auth
-Providers](https://concourse-ci.org/install.html#auth-config) for more
-information..
-
-## Docker Run
-
-Alternatively, these two Docker Run commands can be used to get `concourse-quickstart` up and running with 2 containers.  These command provide not only `concourse`, but also a database instance for it to use.
-
-```
-docker network create concourse-net
+```sh
+$ ./keys/generate
+wrote private key to /keys/session_signing_key
+wrote private key to /keys/tsa_host_key
+wrote ssh public key to /keys/tsa_host_key.pub
+wrote private key to /keys/worker_key
+wrote ssh public key to /keys/worker_key.pub
 ```
 
-```
-docker pull postgres
-docker run --name concourse-db \
-  --net=concourse-net \
-  -h concourse-postgres \
-  -p 5432:5432 \
-  -e POSTGRES_USER=<PG USER> \
-  -e POSTGRES_PASSWORD=<PG P ASSWORD> \
-  -e POSTGRES_DB=atc \
-  -d postgres
-  ```
+Next, run `docker-compose up -d` to start Concourse in the background:
 
+```sh
+$ docker-compose up -d
+Starting concourse-docker_db_1 ... done
+Starting concourse-docker_web_1 ... done
+Starting concourse-docker_worker_1 ... done
 ```
-docker pull concourse/concourse
-docker run  --name concourse \
-  -h concourse \
-  -p 8080:8080 \
-  --detach \
-  --privileged \
-  --net=concourse-net \
-  concourse/concourse quickstart \
-  --add-local-user=<CONCOURSE_USER>:<CONCOURSE_PASSWORD> \
-  --main-team-local-user=<CONCOURSE_USER> \
-  --external-url=http://<DOCKER_MACHINE_IP>:8080 \
-  --postgres-user=<PG_USER> \
-  --postgres-password=<PG_PASSWORD> \
-  --postgres-host=concourse-db \
-  --worker-garden-dns-server 8.8.8.8
+
+The default configuration sets up a `test` user with `test` as their password
+and grants them access to `main` team. To use this in production you'll
+definitely want to change that - see [Auth &
+Teams](https://concourse-ci.org/auth.html) for more information..
+
+If things seem to be going wrong, check the logs for any errors:
+
+```sh
+$ docker-compose logs -f
+Attaching to concourse-docker_worker_1, concourse-docker_web_1, concourse-docker_db_1
+...
 ```
+
+## Running with `docker run`
+
+Concourse components can also be run with regular old `docker run` commands.
+Please use `docker-compose.yml` as the canonical reference for the necessary
+flags/vars and connections between components. Further documentation on
+configuring Concourse is available in the [Concourse Install
+docs](https://concourse-ci.org/install.html).
+
+## Building `concourse/concourse`
+
+The `Dockerfile` in this repo is built as part of our CI process - as such, it
+depends on having a pre-built `linux-rc` available in the working directory, and
+ends up being published as `concourse/concourse`.
 
 ## Caveats
 
-At the moment, workers running via Docker will not automatically leave the
-cluster gracefully on shutdown. This can mean your pipelines get into a bad
-state when you restart the cluster, as they'll keep trying to use the old
-worker.
-
-For now you'll have to run [`fly
-prune-worker`](https://concourse-ci.org/administration.html#fly-prune-worker)
-to reap any stalled workers when your cluster gets into this state.
-
-This will be resolved with [concourse/concourse
-#1457](https://github.com/concourse/concourse/issues/1457).
+* Make sure you configure a "stop signal" of `SIGUSR2` - otherwise the worker
+  will stall on container deletion.
