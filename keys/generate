@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
+_MSYSTEM="$MSYSTEM"
 set -e -u
 
 cd $(dirname $0)
 
 WORK_DIR="$PWD"
-if [ "$MSYSTEM" == "MINGW64" ]; then
+if [ "$_MSYSTEM" == "MINGW64" ]; then
   WORK_DIR="$(cygpath -t windows $(pwd))"
 fi
 
