@@ -23,7 +23,8 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     dumb-init \
     iproute2 \
-    file
+    file \
+    iptables
 
 COPY --from=assets /usr/local/concourse /usr/local/concourse
 
